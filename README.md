@@ -1,23 +1,29 @@
 **E-Commerce Order Engine (FastAPI)**
+**Overview**
 
-**Project Overview**
-This project is a simple backend system that simulates an e-commerce order engine.
-It allows users to add products, manage carts, and place orders.
-The main idea behind this project is to understand how real-world systems handle:
-Multiple users
+This project is a simplified backend system for an e-commerce platform.
+It simulates how real systems handle products, carts, and orders with multiple users.
+
+The goal of this project was to understand core backend concepts like:
+
 Inventory management
 Order processing
-Basic failure handling
+Failure handling
+Concurrency (multiple users accessing same data)
 
-**Features**
-Add and update products
-View available products
-Add items to cart (user-wise)
-Update and remove cart items
-Place orders
-Handles stock validation
-Simulates payment failures
-Prevents inconsistent data using locking
+**Features Implemented**
+Product management (add, view)
+Multi-user cart system
+Stock reservation while adding to cart
+Order placement with payment simulation
+Automatic rollback on failure
+Order cancellation
+Return/refund handling
+Discount and coupon support
+Low stock alerts
+Logging system
+Failure mode simulation
+Concurrent user simulation
 
 **Tech Stack**
 Python
@@ -25,49 +31,51 @@ FastAPI
 Uvicorn
 Pydantic
 
-
 **How to Run**
 Install dependencies:
-pip install fastapi uvicorn
+pip install -r requirements.txt
 Run the server:
-uvicorn Supermarket:app --reload
-Open browser:
+uvicorn main:app --reload
+
+Open in browser:
 http://127.0.0.1:8000/docs
 
-
 **API Endpoints**
-**Product APIs**
-POST /add_product → Add new product
-PUT /update_stock → Update product stock
-GET /products → View all products
-**Cart APIs**
-POST /add_to_cart → Add item to cart
-PUT /update_cart → Update quantity
-DELETE /remove_from_cart → Remove item
-GET /view_cart/{user} → View user cart
-**Order API**
-POST /place_order/{user} → Place order
+**Product**
+POST /add_product
+GET /products
+GET /low_stock
+**Cart**
+POST /add_to_cart
+DELETE /remove_from_cart
+GET /view_cart/{user}
+**Orders**
+POST /place_order/{user}
+POST /cancel_order/{order_id}
+GET /orders
+POST /return_item
+**Others**
+GET /logs
+GET /simulate_concurrent
+POST /toggle_failure
 
 **Sample Flow**
 Add products
 Add items to cart
 View cart
-Place order
-Sometimes order may fail due to simulated payment failure.
+Place order (with or without coupon)
+View orders
+Cancel or return items
 
-**Design Notes**
-Data is stored using in-memory dictionaries
-Each user has a separate cart
-Lock is used to avoid stock conflicts during order placement
-Random module is used to simulate real-world failures
+Note: Payment may fail randomly to simulate real-world scenarios.
 
-**Limitations**
-No database (data will reset on restart)
+**Design Approach**
+Used in-memory dictionaries as database
+Implemented locking for basic concurrency handling
+Added failure simulation to test rollback
+Designed APIs similar to real backend systems
+
+**Assumptions**
+Data is not persisted (resets on restart)
 No authentication system
-Basic validation only
-
-**Future Improvements**
-Add database (MySQL / PostgreSQL)
-User authentication (JWT)
-Order history
-Frontend integration
+Single server simulation
